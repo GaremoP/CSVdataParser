@@ -62,9 +62,10 @@ def format_first_lines(input_file_path, output_directory, header):
         filename = 'Data' + original_name
     else:
         filename = 'DataEstaci' + original_name
-    output_path = os.path.join(output_directory, filename)  # output_directory + "\"  + filename
-    with open(input_file_path, "r") as input_file, open(output_path, "w") as output_file:  # We read the original file
-        for i in range(2):  # Skip first two lines
+    output_path = os.path.join(output_directory, filename)
+    # We read the original file
+    with open(input_file_path, "r") as input_file, open(output_path, "w") as output_file:
+        for i in range(2):  # Skip first two lines (Header)
             next(input_file)
 
         for line in input_file:
@@ -184,10 +185,9 @@ def datetime_together(path_input_data, new_file_name):
     df.to_csv(path_treat_data, index=False)
 
 
-def treating_data(filename):
-    basefilename = os.path.basename(filename)
-    df = pd.read_csv(filename)
-    # print(df.dtypes)
+def treating_data(filename_path):
+    basefilename = os.path.basename(filename_path)
+    df = pd.read_csv(filename_path)
     # Irradiance measurements columns
     irradiance_cols = [col for col in df.columns if 'Irrad' in col]
     df.replace('---', 0.0, inplace=True)  # Replace non taken measures to 0.
@@ -215,8 +215,8 @@ def treating_data(filename):
     return output
 
 
-def resample_24UTC(filename):
-    df = pd.read_csv(filename)
+def resample_24utc(path_file_1440):
+    df = pd.read_csv(path_file_1440)
     # Convert 'Datetime' column to datetime type
     df['Datetime'] = pd.to_datetime(df['Datetime'])
 
@@ -229,14 +229,14 @@ def resample_24UTC(filename):
 
     # Reset the index to have 'Datetime' as a column again
     df_resampled.reset_index(inplace=True)
-    basefilename = os.path.basename(filename)
-    filename24 = basefilename.split('Data')[0] + 'Data24UTC' + basefilename.split('Data')[1]
+    basefilename = os.path.basename(path_file_1440)
+    filename24 = basefilename.split('Data')[0] + 'Data24UTC'+'.CSV'
     output = os.path.join(PATH_DATA_GIJON_24UTC, filename24)
     # Save the resampled data to a new CSV file
     df_resampled.to_csv(output, index=False)
 
 
-def resample_24HLocal(path_file_1440):
+def resample_24hlocal(path_file_1440):
     df = pd.read_csv(path_file_1440)
     # Convert 'Datetime' column to datetime type
     df['Datetime'] = pd.to_datetime(df['Datetime'])
@@ -255,7 +255,7 @@ def resample_24HLocal(path_file_1440):
     df_resampled['Datetime'] = df_resampled['Datetime'].dt.tz_localize(None)
 
     basefilename = os.path.basename(path_file_1440)
-    filename24 = basefilename.split('Data')[0] + 'Data24Local' + basefilename.split('Data')[1]
+    filename24 = basefilename.split('Data')[0] + 'Data24Local'+'.CSV'
     output = os.path.join(PATH_DATA_GIJON_24HORALOCAL, filename24)
     # Save the resampled data to a new CSV file
     df_resampled.to_csv(output, index=False)
@@ -281,7 +281,7 @@ def push_into_db1440(file1440utc, datalogger_db1440):
 
     # Delete columns with no values
     database.dropna(axis=1, how='all', inplace=True)
-    print(f"File: {os.path.basename(file1440utc)}  has been added to database\n")
+    print(f"File: {os.path.basename(file1440utc)}  has been added to database")
     # Save the updated database back to the CSV file
     database.to_csv(datalogger_db1440, index=False)
 
@@ -308,12 +308,6 @@ def push_into_db24(file24local, datalogger_db24):
     print(f"File: {os.path.basename(file24local)}  has been added to database\n")
     # Save the updated database back to the CSV file
     database.to_csv(datalogger_db24, index=False)
-
-
-def empty_csv_file(filename):  # DELETE LIST OF FILES (ONLY IN DEV MODE)
-    # open the file in write mode to truncate it and delete all contents
-    with open(filename, 'w', newline=''):
-        pass
 
 
 def main(file_full_path):
@@ -359,10 +353,9 @@ def main(file_full_path):
 
     file_path_treat = os.path.join(PATH_TREAT_DATA, filename_new)
     filename1440 = treating_data(file_path_treat)
-    #file_path_treated = os.path.join(PATH_DATA_GIJON_1440, filename_new)
     # Convert into 24 rows per day. UTC time and Localtime
-    resample_24UTC(filename1440)
-    localtime_filename = resample_24HLocal(filename1440)
+    resample_24utc(filename1440)
+    localtime_filename = resample_24hlocal(filename1440)
     # Check which database the file is going to be popped into
     if "Estaci" in filename_new:
         push_into_db1440(filename1440, DATALOGGER1_DB)
@@ -377,17 +370,22 @@ def main(file_full_path):
 if __name__ == '__main__':
     # Constants for file management
     PATH_INPUT_FILES = r"C:\Users\pablo\Documents\ProgrammingProjects\PycharmProjects\InputData"
-    PATH_RAW_DATA_PARSED = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\RawDataParsed"
+    PATH_RAW_DATA_PARSED = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\RawDataParsed\DATALOGGERS"
     PATH_TREAT_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos"
     PATH_REVISE_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\RevisarDatos"
     PATH_TREATED_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados"
-    PATH_DATA_GIJON_1440 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\DatosTratados_1440_Gijon"
-    PATH_DATA_GIJON_24UTC = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\DatosTratadosUTC_24_Gijon"
-    PATH_DATA_GIJON_24HORALOCAL = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\DatosTratadosHoraLocal_24_Gijon"
+    PATH_DATA_GIJON_1440 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
+                           r"\DatosTratados_1440_Gijon"
+    PATH_DATA_GIJON_24UTC = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
+                            r"\DatosTratadosUTC_24_Gijon"
+    PATH_DATA_GIJON_24HORALOCAL = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
+                                  r"\DatosTratadosHoraLocal_24_Gijon"
     DATALOGGER1_DB = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger1.csv"
     DATALOGGER2_DB = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger2.csv"
-    DATALOGGER1_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger24hLocalEstaci.csv"
-    DATALOGGER2_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger24hLocal.csv"
+    DATALOGGER1_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
+                       r"\Datalogger24hLocalEstaci.csv"
+    DATALOGGER2_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger24hLocal" \
+                       r".csv"
 
     while True:
         for file in os.listdir(PATH_INPUT_FILES):
