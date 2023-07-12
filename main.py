@@ -369,23 +369,22 @@ def main(file_full_path):
 
 if __name__ == '__main__':
     # Constants for file management
-    PATH_INPUT_FILES = r"C:\Users\pablo\Documents\ProgrammingProjects\PycharmProjects\InputData"
-    PATH_RAW_DATA_PARSED = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\RawDataParsed\DATALOGGERS"
-    PATH_TREAT_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos"
-    PATH_REVISE_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\RevisarDatos"
-    PATH_TREATED_DATA = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados"
-    PATH_DATA_GIJON_1440 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
-                           r"\DatosTratados_1440_Gijon"
-    PATH_DATA_GIJON_24UTC = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
-                            r"\DatosTratadosUTC_24_Gijon"
-    PATH_DATA_GIJON_24HORALOCAL = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
-                                  r"\DatosTratadosHoraLocal_24_Gijon"
-    DATALOGGER1_DB = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger1.csv"
-    DATALOGGER2_DB = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger2.csv"
-    DATALOGGER1_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados" \
+    PATH_INPUT_FILES = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\InputData\DataloggersGijon"
+    PATH_RAW_DATA_PARSED = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\RawDataParsed\Dataloggers_Gijon"
+    PATH_TREAT_DATA = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos"
+    PATH_REVISE_DATA = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\RevisarDatos"
+    PATH_TREATED_DATA = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados"
+    PATH_DATA_GIJON_1440 = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados\DatosDataloggers_1440_Gijon"
+    PATH_DATA_GIJON_24UTC = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos" \
+                            r"\DatosTratados\DatosUTC_24_Gijon"
+    PATH_DATA_GIJON_24HORALOCAL = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos" \
+                                  r"\DatosTratados\DatosHoraLocal_24_Gijon"
+    DATALOGGER1_DB = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados\Datalogger1.csv"
+    DATALOGGER2_DB = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados\Datalogger2.csv"
+    DATALOGGER1_DB24 = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados" \
                        r"\Datalogger24hLocalEstaci.csv"
-    DATALOGGER2_DB24 = r"C:\Users\pablo\Documents\Teleco2018-\5CURSO\TFG\TratarDatos\DatosTratados\Datalogger24hLocal" \
-                       r".csv"
+    DATALOGGER2_DB24 = r"C:\Users\ServidorCEDS\Documents\MonitorizacionPV\TratarDatos\DatosTratados" \
+                       r"\Datalogger24hLocal.csv"
 
     while True:
         for file in os.listdir(PATH_INPUT_FILES):
